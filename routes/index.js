@@ -85,13 +85,13 @@ module.exports = function makeRouterWithSockets(io) {
         // console.log('id', idToInsert)
         if (!idToInsert[0]) {
           // console.log("tester " + err)
-          client.query('INSERT INTO users (name) VALUES ($1)', [username], function(err, data) {
+          client.query('INSERT INTO users (name) VALUES ($1) RETURNING id', [username], function(err, data) {
             if (err) return next(err); // pass errors to Express
               var tweets = data.rows;
               console.log(data);
               // var newID = data.rows
               //insertTweet(res, idToInsert, username, content)
-                client.query('INSERT INTO tweets (user_id, content) VALUES ($1, $2)', [data.id, content], function(err, data) {
+                client.query('INSERT INTO tweets (user_id, content) VALUES ($1, $2)', [tweets[0].id, content], function(err, data) {
                   if (err) return next(err);
                   var tweets = data.rows;
                  res.render('index', {
